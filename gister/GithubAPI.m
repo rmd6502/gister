@@ -44,16 +44,11 @@
     return self;
 }
 
-- (void)loadGistsSince:(NSDate *)sinceDate completion:(ArrayResponseBlock)completion
+- (void)loadGistsSince:(NSString *)sinceDate completion:(ArrayResponseBlock)completion
 {
-    static NSDateFormatter *formatter = nil;
-    if (!formatter) {
-        formatter = [NSDateFormatter new];
-        formatter.dateFormat = @"YYYY-MM-DDTHH:MM:SSZ";
-    }
     NSMutableString *urlString = [@"https://api.github.com/gists/public" mutableCopy];
     if (sinceDate) {
-        [urlString appendFormat:@"?since=%@",[formatter stringFromDate:sinceDate]];
+        [urlString appendFormat:@"?since=%@",sinceDate];
     }
     ArrayResponseBlock mainThreadCompletion = [^(NSArray *array, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{

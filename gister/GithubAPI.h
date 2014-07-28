@@ -12,7 +12,7 @@ typedef void(^StringResponseBlock)(NSString *,NSError *);
 @interface GithubAPI : NSObject
 
 + (GithubAPI *)sharedGithubAPI;
-- (void)loadGistsSince:(NSDate *)sinceDate completion:(ArrayResponseBlock)completion;
+- (void)loadGistsSince:(NSString *)sinceDate completion:(ArrayResponseBlock)completion;
 - (void)loadGistFile:(NSString *)fileURL completion:(StringResponseBlock)completion;
 
 @end

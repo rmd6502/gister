@@ -18,20 +18,58 @@
 @implementation ViewController
 - (IBAction)reject:(UIButton *)sender
 {
+    ++_gistNumber;
+    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
+        if (gists) {
+            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+        }
+        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
+            [self.tableView reloadData];
+        } completion:^(BOOL finished) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }];
+    }];
 }
 
 - (IBAction)accept:(UIButton *)sender
 {
+    ++_gistNumber;
+    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
+        if (gists) {
+            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+        }
+        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
+            [self.tableView reloadData];
+        } completion:^(BOOL finished) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }];
+    }];
 }
 
 - (void)previous
 {
-
+    if (_gistNumber > 0) {
+        --_gistNumber;
+        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromTop) animations:^{
+            [self.tableView reloadData];
+        } completion:^(BOOL finished) {
+        }];
+    }
 }
 
 - (void)next
 {
-
+    ++_gistNumber;
+    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
+        if (gists) {
+            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+        }
+        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromBottom) animations:^{
+            [self.tableView reloadData];
+        } completion:^(BOOL finished) {
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+        }];
+    }];
 }
 - (IBAction)swipeRejectOrAccept:(UISwipeGestureRecognizer *)sender
 {
@@ -60,13 +98,31 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self _reloadIfNecessary];
+}
+
+typedef void (^CompletionBlock)(NSArray *gists, NSError *error);
+
+- (void)_reloadIfNecessary
+{
+    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
+        if (gists) {
+            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+        }
+        [self.tableView reloadData];
+    }];
+}
+
+- (void)_reloadIfNecessaryWithCompletion:(CompletionBlock)completion
+{
+    NSString *sinceDate = nil;
     if (_gists.count - _gistNumber < 1) {
-        [[GithubAPI sharedGithubAPI] loadGistsSince:nil completion:^(NSArray *gists, NSError *error) {
-            if (gists) {
-                _gists = gists;
-                [self.tableView reloadData];
-            }
-        }];
+        if (_gists.count) {
+            sinceDate = ((NSDictionary *)_gists[0])[@"updated_at"];
+        }
+        [[GithubAPI sharedGithubAPI] loadGistsSince:sinceDate completion:completion];
+    } else {
+        completion(nil,nil);
     }
 }
 
@@ -84,11 +140,16 @@
     return 2;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.row == 0) ? 22.0f : CGRectGetHeight(tableView.bounds) - 32.0f;
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell = nil;
-    NSUInteger row = indexPath.row / 2;
-    if (indexPath.row & 1) {
+    NSUInteger row = indexPath.section;
+    if (indexPath.row == 1) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
         ((GISTFileCellTableViewCell *)cell).fileURL = _gists[_gistNumber][@"files"][[_gists[_gistNumber][@"files"] allKeys][row]][@"raw_url"];
     } else {
