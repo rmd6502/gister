@@ -108,6 +108,6 @@
 - (void)_sendRequest:(NSString *)url withResponse:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-    [_session dataTaskWithRequest:request completionHandler:completionHandler];
+    [[_session dataTaskWithRequest:request completionHandler:completionHandler] resume];
 }
 @end

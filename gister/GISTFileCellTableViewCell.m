@@ -7,9 +7,10 @@
 //
 
 #import "GISTFileCellTableViewCell.h"
+#import "GithubAPI.h"
 
 @interface GISTFileCellTableViewCell ()
-@property (nonatomic,weak) IBOutlet UITextView *textView;
+@property (nonatomic) IBOutlet UITextView *textView;
 @end
 
 @implementation GISTFileCellTableViewCell
@@ -30,6 +31,27 @@
     [super setSelected:selected animated:animated];
 
     // Configure the view for the selected state
+}
+
+- (void)prepareForReuse
+{
+    self.fileURL = nil;
+}
+
+- (void)setFileURL:(NSString *)fileURL
+{
+    if (_fileURL != fileURL) {
+        _fileURL = [fileURL copy];
+        if (_fileURL) {
+            [[GithubAPI sharedGithubAPI] loadGistFile:_fileURL completion:^(NSString *string, NSError *error) {
+                if (!error) {
+                    _textView.text = string;
+                }
+            }];
+        } else {
+            _textView.text = nil;
+        }
+    }
 }
 
 @end

@@ -50,6 +50,10 @@
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="vXZ-lx-hvc" id="YHy-kM-KQi"/>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="Mun-kW-eqM"/>
+                                </connections>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kpy-p5-JMZ">
                                 <rect key="frame" x="20" y="429" width="85" height="30"/>
