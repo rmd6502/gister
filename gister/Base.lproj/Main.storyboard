@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6162" systemVersion="14A238h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6185.7" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6160"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6181.2"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,11 +15,71 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="hrw-49-vb9">
+                                <rect key="frame" x="0.0" y="20" width="480" height="373"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="373" id="7K0-aH-fvU"/>
+                                </constraints>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kpy-p5-JMZ">
+                                <rect key="frame" x="20" y="429" width="85" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="85" id="UpU-Go-LVd"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                <state key="normal" title="No" image="dialog_ic_close_focused_holo_light.png">
+                                    <color key="titleColor" red="1" green="0.16896822440000001" blue="0.13944268300000001" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="reject:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="nbs-Bp-8XP"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ueb-Hc-OoD">
+                                <rect key="frame" x="386" y="413" width="74" height="62"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="74" id="cXp-dj-IPW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
+                                <state key="normal" title="Yes" image="btn_check_on_holo_light.png">
+                                    <color key="titleColor" red="0.35445719720000002" green="0.68584308620000001" blue="0.77263077449999995" alpha="0.48999999999999999" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="accept:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="TRu-zU-fbd"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="Ueb-Hc-OoD" secondAttribute="bottom" constant="5" id="7t6-w0-UGd"/>
+                            <constraint firstAttribute="trailing" secondItem="Ueb-Hc-OoD" secondAttribute="trailing" constant="20" symbolic="YES" id="MuH-CK-0PX"/>
+                            <constraint firstItem="Ueb-Hc-OoD" firstAttribute="top" secondItem="hrw-49-vb9" secondAttribute="bottom" constant="20" id="Pmq-bB-CRm"/>
+                            <constraint firstItem="kpy-p5-JMZ" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="VUO-mh-bSQ"/>
+                            <constraint firstAttribute="trailing" secondItem="hrw-49-vb9" secondAttribute="trailing" id="YV6-rS-bXa"/>
+                            <constraint firstItem="hrw-49-vb9" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" constant="20" symbolic="YES" id="hQ7-sd-eFo"/>
+                            <constraint firstItem="Ueb-Hc-OoD" firstAttribute="baseline" secondItem="kpy-p5-JMZ" secondAttribute="baseline" id="iGT-hd-Rar"/>
+                            <constraint firstItem="hrw-49-vb9" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="lf1-jo-0Kb"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="hrw-49-vb9" id="xg1-K8-oMG"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <swipeGestureRecognizer direction="right" id="Ewf-ry-RC3">
+                    <connections>
+                        <action selector="swipeRejectOrAccept:" destination="vXZ-lx-hvc" id="VCV-gP-Tk4"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
+            <point key="canvasLocation" x="245" y="390"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="btn_check_on_holo_light.png" width="30" height="30"/>
+        <image name="dialog_ic_close_focused_holo_light.png" width="30" height="30"/>
+    </resources>
 </document>

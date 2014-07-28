@@ -13,6 +13,11 @@
 		D6B7D6481986A8CE007D42FD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6461986A8CE007D42FD /* Main.storyboard */; };
 		D6B7D64A1986A8CE007D42FD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6491986A8CE007D42FD /* Images.xcassets */; };
 		D6B7D6561986A8CF007D42FD /* gisterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B7D6551986A8CF007D42FD /* gisterTests.m */; };
+		D6B7D6601986A989007D42FD /* heart_shine.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D65F1986A989007D42FD /* heart_shine.png */; };
+		D6B7D6621986A9B3007D42FD /* btn_check_on_holo_light.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6611986A9B3007D42FD /* btn_check_on_holo_light.png */; };
+		D6B7D6641986AA5F007D42FD /* presence_busy.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6631986AA5F007D42FD /* presence_busy.png */; };
+		D6B7D6661986AA88007D42FD /* dialog_ic_close_focused_holo_light.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6651986AA88007D42FD /* dialog_ic_close_focused_holo_light.png */; };
+		D6B7D6691986AFD4007D42FD /* GithubAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B7D6681986AFD4007D42FD /* GithubAPI.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +43,13 @@
 		D6B7D64F1986A8CF007D42FD /* gisterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = gisterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D6B7D6541986A8CF007D42FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D6B7D6551986A8CF007D42FD /* gisterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = gisterTests.m; sourceTree = "<group>"; };
+		D6B7D65F1986A989007D42FD /* heart_shine.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_shine.png; sourceTree = "<group>"; };
+		D6B7D6611986A9B3007D42FD /* btn_check_on_holo_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_check_on_holo_light.png; sourceTree = "<group>"; };
+		D6B7D6631986AA5F007D42FD /* presence_busy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = presence_busy.png; sourceTree = "<group>"; };
+		D6B7D6651986AA88007D42FD /* dialog_ic_close_focused_holo_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = dialog_ic_close_focused_holo_light.png; sourceTree = "<group>"; };
+		D6B7D6671986AFD4007D42FD /* GithubAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubAPI.h; sourceTree = "<group>"; };
+		D6B7D6681986AFD4007D42FD /* GithubAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubAPI.m; sourceTree = "<group>"; };
+		D6B7D66A1986AFFE007D42FD /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +98,8 @@
 				D6B7D6461986A8CE007D42FD /* Main.storyboard */,
 				D6B7D6491986A8CE007D42FD /* Images.xcassets */,
 				D6B7D63C1986A8CE007D42FD /* Supporting Files */,
+				D6B7D6671986AFD4007D42FD /* GithubAPI.h */,
+				D6B7D6681986AFD4007D42FD /* GithubAPI.m */,
 			);
 			path = gister;
 			sourceTree = "<group>";
@@ -93,8 +107,13 @@
 		D6B7D63C1986A8CE007D42FD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D6B7D6651986AA88007D42FD /* dialog_ic_close_focused_holo_light.png */,
+				D6B7D6631986AA5F007D42FD /* presence_busy.png */,
+				D6B7D6611986A9B3007D42FD /* btn_check_on_holo_light.png */,
+				D6B7D65F1986A989007D42FD /* heart_shine.png */,
 				D6B7D63D1986A8CE007D42FD /* Info.plist */,
 				D6B7D63E1986A8CE007D42FD /* main.m */,
+				D6B7D66A1986AFFE007D42FD /* PrefixHeader.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -196,8 +215,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D6B7D6641986AA5F007D42FD /* presence_busy.png in Resources */,
+				D6B7D6601986A989007D42FD /* heart_shine.png in Resources */,
 				D6B7D6481986A8CE007D42FD /* Main.storyboard in Resources */,
 				D6B7D64A1986A8CE007D42FD /* Images.xcassets in Resources */,
+				D6B7D6621986A9B3007D42FD /* btn_check_on_holo_light.png in Resources */,
+				D6B7D6661986AA88007D42FD /* dialog_ic_close_focused_holo_light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,6 +241,7 @@
 				D6B7D6451986A8CE007D42FD /* ViewController.m in Sources */,
 				D6B7D6421986A8CE007D42FD /* AppDelegate.m in Sources */,
 				D6B7D63F1986A8CE007D42FD /* main.m in Sources */,
+				D6B7D6691986AFD4007D42FD /* GithubAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,6 +356,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = gister/PrefixHeader.pch;
 				INFOPLIST_FILE = gister/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -343,6 +368,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PREFIX_HEADER = gister/PrefixHeader.pch;
 				INFOPLIST_FILE = gister/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
