@@ -18,6 +18,18 @@
 
 @implementation GithubAPI
 
++ (GithubAPI *)sharedGithubAPI
+{
+    static GithubAPI *instance = nil;
+    static dispatch_once_t once;
+
+    if (instance == nil) dispatch_once(&once, ^{
+        instance = [GithubAPI new];
+    });
+
+    return instance;
+}
+
 - (instancetype)init
 {
     if ((self = [super init])) {

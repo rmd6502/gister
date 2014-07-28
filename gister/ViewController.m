@@ -6,11 +6,12 @@
 //  Copyright (c) 2014 Robert Diamond. All rights reserved.
 //
 
+#import "GithubAPI.h"
 #import "ViewController.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-
+@property (nonatomic) NSArray *gists;
 @end
 
 @implementation ViewController
@@ -53,7 +54,50 @@
             
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (_gists.count - _gistNumber < 1) {
+        [[GithubAPI sharedGithubAPI] loadGistsSince:nil completion:^(NSArray *gists, NSError *error) {
+            if (gists) {
+                _gists = gists;
+                [self.tableView reloadData];
+            }
+        }];
+    }
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    if (_gistNumber > _gists.count) {
+        return ((NSDictionary *)_gists[_gistNumber][@"files"]).count;
+    } else {
+        return 0;
+    }
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return 2;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell *cell = nil;
+    if (indexPath.row & 1) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"gistTitle"];
+    }
+
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
 }
 
 - (void)didReceiveMemoryWarning {

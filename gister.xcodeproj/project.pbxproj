@@ -18,6 +18,7 @@
 		D6B7D6641986AA5F007D42FD /* presence_busy.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6631986AA5F007D42FD /* presence_busy.png */; };
 		D6B7D6661986AA88007D42FD /* dialog_ic_close_focused_holo_light.png in Resources */ = {isa = PBXBuildFile; fileRef = D6B7D6651986AA88007D42FD /* dialog_ic_close_focused_holo_light.png */; };
 		D6B7D6691986AFD4007D42FD /* GithubAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B7D6681986AFD4007D42FD /* GithubAPI.m */; };
+		D6B7D66E1986CE79007D42FD /* GISTFileCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = D6B7D66D1986CE79007D42FD /* GISTFileCellTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,8 @@
 		D6B7D6671986AFD4007D42FD /* GithubAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GithubAPI.h; sourceTree = "<group>"; };
 		D6B7D6681986AFD4007D42FD /* GithubAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GithubAPI.m; sourceTree = "<group>"; };
 		D6B7D66A1986AFFE007D42FD /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		D6B7D66C1986CE79007D42FD /* GISTFileCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GISTFileCellTableViewCell.h; sourceTree = "<group>"; };
+		D6B7D66D1986CE79007D42FD /* GISTFileCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GISTFileCellTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +103,8 @@
 				D6B7D63C1986A8CE007D42FD /* Supporting Files */,
 				D6B7D6671986AFD4007D42FD /* GithubAPI.h */,
 				D6B7D6681986AFD4007D42FD /* GithubAPI.m */,
+				D6B7D66C1986CE79007D42FD /* GISTFileCellTableViewCell.h */,
+				D6B7D66D1986CE79007D42FD /* GISTFileCellTableViewCell.m */,
 			);
 			path = gister;
 			sourceTree = "<group>";
@@ -241,6 +246,7 @@
 				D6B7D6451986A8CE007D42FD /* ViewController.m in Sources */,
 				D6B7D6421986A8CE007D42FD /* AppDelegate.m in Sources */,
 				D6B7D63F1986A8CE007D42FD /* main.m in Sources */,
+				D6B7D66E1986CE79007D42FD /* GISTFileCellTableViewCell.m in Sources */,
 				D6B7D6691986AFD4007D42FD /* GithubAPI.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
