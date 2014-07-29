@@ -213,11 +213,9 @@ typedef void (^CompletionBlock)(NSError *error);
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    UILabel *label = [UILabel new];
-    label.text = [_gists[_gistNumber][@"files"] allKeys][section];
-    return label;
+    return _gistFiles[section];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
