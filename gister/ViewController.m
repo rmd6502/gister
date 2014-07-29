@@ -82,10 +82,10 @@
 - (IBAction)swipeRejectOrAccept:(UISwipeGestureRecognizer *)sender
 {
     switch (sender.direction) {
-        case UISwipeGestureRecognizerDirectionLeft:
+        case UISwipeGestureRecognizerDirectionRight:
             [self reject:nil];
             break;
-        case UISwipeGestureRecognizerDirectionRight:
+        case UISwipeGestureRecognizerDirectionLeft:
             [self accept:nil];
             break;
         case UISwipeGestureRecognizerDirectionUp:
