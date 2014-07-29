@@ -14,13 +14,13 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *gists;
 @property (nonatomic) NSArray *gistFiles;
-@property (nonatomic) NSDictionary *gistCache;
+@property (nonatomic) NSMutableDictionary *gistCache;
 @end
 
 @implementation ViewController
 - (IBAction)reject:(UIButton *)sender
 {
-    ++_gistNumber;
+    ++self.gistNumber;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
         if (!_gists.count) {
             return;
@@ -37,7 +37,7 @@
 
 - (IBAction)accept:(UIButton *)sender
 {
-    ++_gistNumber;
+    ++self.gistNumber;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
         if (!_gists.count) {
             return;
@@ -55,7 +55,7 @@
 - (void)previous
 {
     if (_gistNumber > 0) {
-        --_gistNumber;
+        --self.gistNumber;
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromTop) animations:^{
             [self.tableView reloadData];
         } completion:^(BOOL finished) {
@@ -65,7 +65,7 @@
 
 - (void)next
 {
-    ++_gistNumber;
+    ++self.gistNumber;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
         if (!_gists.count) {
             return;
@@ -130,20 +130,45 @@ typedef void (^CompletionBlock)(NSError *error);
             if (gists) {
                 _gists = [gists arrayByAddingObjectsFromArray:_gists];
             }
-            if (_gists.count > _gistNumber) {
-                _gistFiles = [((NSDictionary *)_gists[_gistNumber])[@"files"] allKeys];
-            } else {
-                _gistFiles = nil;
-            }
+            [self _updateGist];
             completion(error);
         }];
     } else {
-        if (_gists.count > _gistNumber) {
-            _gistFiles = [((NSDictionary *)_gists[_gistNumber])[@"files"] allKeys];
-        } else {
-            _gistFiles = nil;
-        }
         completion(nil);
+    }
+}
+
+- (void)setGistNumber:(NSUInteger)gistNumber
+{
+    if (_gistNumber != gistNumber) {
+        _gistNumber = gistNumber;
+        [self _updateGist];
+    }
+}
+
+- (void)_updateGist
+{
+    if (_gists.count > _gistNumber) {
+        _gistFiles = [[((NSDictionary *)_gists[_gistNumber])[@"files"] allKeys] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [(NSString *)obj1 compare:(NSString *)obj2];
+        }];
+        GithubAPI *githubAPI = [GithubAPI sharedGithubAPI];
+        NSDictionary *currentGistFiles = _gists[_gistNumber][@"files"];
+        _gistCache = [NSMutableDictionary new];
+        __weak typeof(self) weakSelf = self;
+        NSUInteger section = 0;
+        for (NSString *file in _gistFiles) {
+            [githubAPI loadGistFile:((NSDictionary *)currentGistFiles[file])[@"raw_url"] completion:^(NSString *data, NSError *error) {
+                typeof(self) strongSelf = weakSelf;
+                if (strongSelf) {
+                    strongSelf.gistCache[file] = data;
+                    [strongSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:section] withRowAnimation:UITableViewRowAnimationAutomatic];
+                }
+            }];
+            ++section;
+        }
+    } else {
+        _gistFiles = nil;
     }
 }
 
@@ -166,11 +191,23 @@ typedef void (^CompletionBlock)(NSError *error);
     return CGRectGetHeight(tableView.bounds) - 10.0f;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSString *text = _gistCache[_gistFiles[indexPath.section]];
+    if (_gistFiles.count > indexPath.section && text.length) {
+        return [text boundingRectWithSize:CGSizeMake(tableView.bounds.size.width, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica Neue" size:12.0f]} context:[NSStringDrawingContext new]].size.height;
+    }
+
+    return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     GISTFileCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
     if (_gistFiles.count > indexPath.section) {
-        cell.textView.text = _gists[_gistNumber][@"files"][_gistFiles[indexPath.section]][@"raw_url"];
+        if (_gistCache[_gistFiles[indexPath.section]]) {
+            cell.textView.text = _gistCache[_gistFiles[indexPath.section]];
+        }
     }
 
     return cell;
