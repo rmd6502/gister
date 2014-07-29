@@ -8,11 +8,10 @@
 
 #import "GithubAPI.h"
 
-@interface GithubAPI () <NSURLSessionDelegate>
+@interface GithubAPI () <NSURLSessionTaskDelegate>
 
 @property (nonatomic) NSURLSession *session;
 @property (nonatomic) NSOperationQueue *bgQueue;
-@property (nonatomic) dispatch_queue_t bgDispatchQueue;
 
 @end
 
@@ -33,9 +32,8 @@
 - (instancetype)init
 {
     if ((self = [super init])) {
-        _bgDispatchQueue = dispatch_queue_create("URLFetcher", 0);
         _bgQueue = [[NSOperationQueue alloc] init];
-        _bgQueue.underlyingQueue = _bgDispatchQueue;
+        _bgQueue.name = @"URLFetcher";
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
         config.timeoutIntervalForResource = 180.0f;
         _session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:_bgQueue];
@@ -52,6 +50,9 @@
     }
     ArrayResponseBlock mainThreadCompletion = [^(NSArray *array, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if (error) {
+                NSLog(@"error: %@", error);
+            }
             completion(array, error);
         });
     } copy];
@@ -103,6 +104,8 @@
 - (void)_sendRequest:(NSString *)url withResponse:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+    [request setValue:@"close" forHTTPHeaderField:@"Connection"];
     [[_session dataTaskWithRequest:request completionHandler:completionHandler] resume];
 }
+
 @end

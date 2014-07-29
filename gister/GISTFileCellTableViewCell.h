@@ -10,5 +10,6 @@
 
 @interface GISTFileCellTableViewCell : UITableViewCell
 
-@property (nonatomic,copy) NSString *fileURL;
+@property (nonatomic) IBOutlet UILabel *textView;
+
 @end

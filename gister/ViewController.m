@@ -13,20 +13,24 @@
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *gists;
+@property (nonatomic) NSArray *gistFiles;
+@property (nonatomic) NSDictionary *gistCache;
 @end
 
 @implementation ViewController
 - (IBAction)reject:(UIButton *)sender
 {
     ++_gistNumber;
-    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
-        if (gists) {
-            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+    [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
+        if (!_gists.count) {
+            return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
             [self.tableView reloadData];
         } completion:^(BOOL finished) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (_gists.count) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         }];
     }];
 }
@@ -34,14 +38,16 @@
 - (IBAction)accept:(UIButton *)sender
 {
     ++_gistNumber;
-    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
-        if (gists) {
-            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+    [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
+        if (!_gists.count) {
+            return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
             [self.tableView reloadData];
         } completion:^(BOOL finished) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (_gists.count) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         }];
     }];
 }
@@ -60,14 +66,16 @@
 - (void)next
 {
     ++_gistNumber;
-    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
-        if (gists) {
-            _gists = [gists arrayByAddingObjectsFromArray:_gists];
+    [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
+        if (!_gists.count) {
+            return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromBottom) animations:^{
             [self.tableView reloadData];
         } completion:^(BOOL finished) {
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (_gists.count) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            }
         }];
     }];
 }
@@ -93,6 +101,7 @@
             
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self.tableView setNeedsUpdateConstraints];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -101,14 +110,11 @@
     [self _reloadIfNecessary];
 }
 
-typedef void (^CompletionBlock)(NSArray *gists, NSError *error);
+typedef void (^CompletionBlock)(NSError *error);
 
 - (void)_reloadIfNecessary
 {
-    [self _reloadIfNecessaryWithCompletion:^(NSArray *gists, NSError *error) {
-        if (gists) {
-            _gists = [gists arrayByAddingObjectsFromArray:_gists];
-        }
+    [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
         [self.tableView reloadData];
     }];
 }
@@ -120,9 +126,24 @@ typedef void (^CompletionBlock)(NSArray *gists, NSError *error);
         if (_gists.count) {
             sinceDate = ((NSDictionary *)_gists[0])[@"updated_at"];
         }
-        [[GithubAPI sharedGithubAPI] loadGistsSince:sinceDate completion:completion];
+        [[GithubAPI sharedGithubAPI] loadGistsSince:sinceDate completion:^(NSArray *gists, NSError *error) {
+            if (gists) {
+                _gists = [gists arrayByAddingObjectsFromArray:_gists];
+            }
+            if (_gists.count > _gistNumber) {
+                _gistFiles = [((NSDictionary *)_gists[_gistNumber])[@"files"] allKeys];
+            } else {
+                _gistFiles = nil;
+            }
+            completion(error);
+        }];
     } else {
-        completion(nil,nil);
+        if (_gists.count > _gistNumber) {
+            _gistFiles = [((NSDictionary *)_gists[_gistNumber])[@"files"] allKeys];
+        } else {
+            _gistFiles = nil;
+        }
+        completion(nil);
     }
 }
 
@@ -137,32 +158,44 @@ typedef void (^CompletionBlock)(NSArray *gists, NSError *error);
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 2;
+    return 1;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.row == 0) ? 22.0f : CGRectGetHeight(tableView.bounds) - 32.0f;
+    return CGRectGetHeight(tableView.bounds) - 10.0f;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = nil;
-    NSUInteger row = indexPath.section;
-    if (indexPath.row == 1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
-        ((GISTFileCellTableViewCell *)cell).fileURL = _gists[_gistNumber][@"files"][[_gists[_gistNumber][@"files"] allKeys][row]][@"raw_url"];
-    } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:@"gistTitle"];
-        cell.textLabel.text = [_gists[_gistNumber][@"files"] allKeys][row];
+    GISTFileCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
+    if (_gistFiles.count > indexPath.section) {
+        cell.textView.text = _gists[_gistNumber][@"files"][_gistFiles[indexPath.section]][@"raw_url"];
     }
 
     return cell;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UILabel *label = [UILabel new];
+    label.text = [_gists[_gistNumber][@"files"] allKeys][section];
+    return label;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 1.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 22.0f;
 }
 
 - (void)didReceiveMemoryWarning {

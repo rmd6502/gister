@@ -7,11 +7,6 @@
 //
 
 #import "GISTFileCellTableViewCell.h"
-#import "GithubAPI.h"
-
-@interface GISTFileCellTableViewCell ()
-@property (nonatomic) IBOutlet UITextView *textView;
-@end
 
 @implementation GISTFileCellTableViewCell
 
@@ -35,23 +30,14 @@
 
 - (void)prepareForReuse
 {
-    self.fileURL = nil;
+    self.textView.text = @"Loading...";
 }
 
-- (void)setFileURL:(NSString *)fileURL
+- (CGSize)sizeThatFits:(CGSize)size
 {
-    if (_fileURL != fileURL) {
-        _fileURL = [fileURL copy];
-        if (_fileURL) {
-            [[GithubAPI sharedGithubAPI] loadGistFile:_fileURL completion:^(NSString *string, NSError *error) {
-                if (!error) {
-                    _textView.text = string;
-                }
-            }];
-        } else {
-            _textView.text = nil;
-        }
-    }
+    CGSize mySz = CGSizeMake(self.bounds.size.width, 9999.0f);
+    CGSize textSize = [self.textView.text boundingRectWithSize:mySz options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: self.textView.font} context:[NSStringDrawingContext new]].size;
+    return CGSizeMake(textSize.width + 10.0f, textSize.height + 10.0f);
 }
 
 @end
