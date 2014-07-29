@@ -101,13 +101,22 @@
             
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self.tableView setNeedsUpdateConstraints];
+    NSLog(@"load: %@", NSStringFromCGRect(self.view.bounds));
+    [self.view setNeedsUpdateConstraints];
+    [self.view setNeedsLayout];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    NSLog(@"appear: %@", NSStringFromCGRect(self.view.bounds));
     [self _reloadIfNecessary];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    NSLog(@"layout: %@", NSStringFromCGRect(self.view.bounds));
 }
 
 typedef void (^CompletionBlock)(NSError *error);
@@ -188,7 +197,7 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return CGRectGetHeight(tableView.bounds) - 10.0f;
+    return 33.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -225,7 +234,7 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 1.0f;
+    return 0.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
