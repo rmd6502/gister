@@ -99,32 +99,19 @@
     }
 }
             
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    NSLog(@"load: %@", NSStringFromCGRect(self.view.bounds));
-    [self.view setNeedsUpdateConstraints];
-    [self.view setNeedsLayout];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    NSLog(@"appear: %@", NSStringFromCGRect(self.view.bounds));
     [self _reloadIfNecessary];
-}
-
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    NSLog(@"layout: %@", NSStringFromCGRect(self.view.bounds));
 }
 
 typedef void (^CompletionBlock)(NSError *error);
 
 - (void)_reloadIfNecessary
 {
+    __weak typeof(self) weakSelf = self;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
-        [self.tableView reloadData];
+        [weakSelf.tableView reloadData];
     }];
 }
 
@@ -135,12 +122,16 @@ typedef void (^CompletionBlock)(NSError *error);
         if (_gists.count) {
             sinceDate = ((NSDictionary *)_gists[0])[@"updated_at"];
         }
+        __weak typeof(self) weakSelf = self;
         [[GithubAPI sharedGithubAPI] loadGistsSince:sinceDate completion:^(NSArray *gists, NSError *error) {
-            if (gists) {
-                _gists = [gists arrayByAddingObjectsFromArray:_gists];
+            typeof(self) strongSelf = weakSelf;
+            if (strongSelf) {
+                if (gists) {
+                    strongSelf.gists = [gists arrayByAddingObjectsFromArray:strongSelf.gists];
+                }
+                [strongSelf _updateGist];
+                completion(error);
             }
-            [self _updateGist];
-            completion(error);
         }];
     } else {
         completion(nil);
