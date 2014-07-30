@@ -175,7 +175,7 @@ typedef void (^CompletionBlock)(NSError *error);
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     if (_gistNumber < _gists.count) {
-        return ((NSDictionary *)_gists[_gistNumber][@"files"]).count;
+        return _gistFiles.count;
     } else {
         return 0;
     }
@@ -195,7 +195,7 @@ typedef void (^CompletionBlock)(NSError *error);
 {
     NSString *text = _gistCache[_gistFiles[indexPath.section]];
     if (_gistFiles.count > indexPath.section && text.length) {
-        return [text boundingRectWithSize:CGSizeMake(tableView.bounds.size.width, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [UIFont fontWithName:@"Helvetica Neue" size:12.0f]} context:[NSStringDrawingContext new]].size.height;
+        return [text boundingRectWithSize:CGSizeMake(tableView.bounds.size.width, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [self _textFont]} context:[NSStringDrawingContext new]].size.height;
     }
 
     return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
@@ -204,6 +204,7 @@ typedef void (^CompletionBlock)(NSError *error);
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     GISTFileCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"gistFile"];
+    cell.textView.font = [self _textFont];
     if (_gistFiles.count > indexPath.section) {
         if (_gistCache[_gistFiles[indexPath.section]]) {
             cell.textView.text = _gistCache[_gistFiles[indexPath.section]];
@@ -213,9 +214,14 @@ typedef void (^CompletionBlock)(NSError *error);
     return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return _gistFiles[section];
+    UILabel *ret = [UILabel new];
+    ret.font = [self _sectionHeaderFont];
+    ret.text = _gistFiles[section];
+    ret.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:.95];
+    [ret sizeToFit];
+    return ret;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -230,12 +236,22 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 22.0f;
+    return [_gistFiles[section] boundingRectWithSize:CGSizeMake(tableView.bounds.size.width - 16.0f, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [self _sectionHeaderFont]} context:[NSStringDrawingContext new]].size.height + 6.0f;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (UIFont *)_sectionHeaderFont
+{
+    return [UIFont fontWithName:@"HelveticaNeue-Thin" size:14.0f];
+}
+
+- (UIFont *)_textFont
+{
+    return [UIFont fontWithName:@"Menlo-Regular" size:8.0f];
 }
 
 @end
