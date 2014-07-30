@@ -216,10 +216,15 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UILabel *ret = [UILabel new];
-    ret.font = [self _sectionHeaderFont];
-    ret.text = _gistFiles[section];
+    UIView *ret = [UIView new];
+    ret.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UILabel *label = [UILabel new];
+    label.font = [self _sectionHeaderFont];
+    label.text = _gistFiles[section];
+    [label sizeToFit];
     ret.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:.95];
+    [ret addSubview:label];
+    label.frame = CGRectMake(5, 0, label.bounds.size.width, label.bounds.size.height);
     [ret sizeToFit];
     return ret;
 }
