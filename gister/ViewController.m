@@ -27,7 +27,7 @@
         if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
-        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
+        [UIView transitionWithView:strongSelf.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
             [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
             if (strongSelf.gists.count) {
@@ -46,7 +46,7 @@
         if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
-        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
+        [UIView transitionWithView:strongSelf.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
             [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
             if (strongSelf.gists.count) {
@@ -76,7 +76,7 @@
         if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
-        [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromBottom) animations:^{
+        [UIView transitionWithView:strongSelf.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromBottom) animations:^{
             [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
             if (strongSelf.gists.count) {
