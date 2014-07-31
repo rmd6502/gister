@@ -103,9 +103,16 @@
 
 - (void)_sendRequest:(NSString *)url withResponse:(void (^)(NSData *data, NSURLResponse *response, NSError *error))completionHandler
 {
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
-    [request setValue:@"close" forHTTPHeaderField:@"Connection"];
-    [[_session dataTaskWithRequest:request completionHandler:completionHandler] resume];
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        typeof(self) strongSelf = weakSelf;
+        if (strongSelf) {
+            NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:url]];
+            [request setValue:@"close" forHTTPHeaderField:@"Connection"];
+            [[strongSelf.session dataTaskWithRequest:request completionHandler:completionHandler] resume];
+        }
+    });
+
 }
 
 @end

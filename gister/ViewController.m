@@ -132,8 +132,14 @@ typedef void (^CompletionBlock)(NSError *error);
         [[GithubAPI sharedGithubAPI] loadGistsSince:sinceDate completion:^(NSArray *gists, NSError *error) {
             typeof(self) strongSelf = weakSelf;
             if (strongSelf) {
-                if (gists) {
-                    strongSelf.gists = [gists arrayByAddingObjectsFromArray:strongSelf.gists];
+                if (error) {
+                    [[[UIAlertView alloc] initWithTitle:@"Problem" message:error.localizedDescription delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try Again", nil] show];
+                }
+                NSUInteger startIndex = (strongSelf.gists.count) ? 1 : 0;
+                if (gists.count > startIndex) {
+                    strongSelf.gists = [[gists subarrayWithRange:NSMakeRange(startIndex, gists.count-startIndex)] arrayByAddingObjectsFromArray:strongSelf.gists];
+                } else {
+                    [[[UIAlertView alloc] initWithTitle:@"No More!" message:@"You've reached the end!" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try Again", nil] show];
                 }
                 [strongSelf _updateGist];
                 completion(error);
@@ -141,6 +147,13 @@ typedef void (^CompletionBlock)(NSError *error);
         }];
     } else {
         completion(nil);
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        [self _reloadIfNecessary];
     }
 }
 
@@ -239,7 +252,7 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
