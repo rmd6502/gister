@@ -30,7 +30,7 @@
         [UIView transitionWithView:strongSelf.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
             [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
-            if (strongSelf.gists.count) {
+            if (strongSelf.gists.count > strongSelf.gistNumber) {
                 [strongSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }];
@@ -49,7 +49,7 @@
         [UIView transitionWithView:strongSelf.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
             [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
-            if (strongSelf.gists.count) {
+            if (strongSelf.gists.count > strongSelf.gistNumber) {
                 [strongSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }];
@@ -135,7 +135,14 @@ typedef void (^CompletionBlock)(NSError *error);
                 if (error) {
                     [[[UIAlertView alloc] initWithTitle:@"Problem" message:error.localizedDescription delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Try Again", nil] show];
                 }
-                NSUInteger startIndex = (strongSelf.gists.count) ? 1 : 0;
+                NSUInteger startIndex = 0;
+                while (strongSelf.gists.count && startIndex < gists.count) {
+                    if ([strongSelf.gists indexOfObject:gists[startIndex]] == NSNotFound) {
+                        break;
+                    } else {
+                        ++startIndex;
+                    }
+                }
                 if (gists.count > startIndex) {
                     strongSelf.gists = [[gists subarrayWithRange:NSMakeRange(startIndex, gists.count-startIndex)] arrayByAddingObjectsFromArray:strongSelf.gists];
                 } else {
