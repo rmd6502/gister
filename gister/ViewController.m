@@ -21,15 +21,17 @@
 - (IBAction)reject:(UIButton *)sender
 {
     ++self.gistNumber;
+    __weak typeof(self) weakSelf = self;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
-        if (!_gists.count) {
+        typeof(self) strongSelf = weakSelf;
+        if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromLeft) animations:^{
-            [self.tableView reloadData];
+            [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
-            if (_gists.count) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (strongSelf.gists.count) {
+                [strongSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }];
     }];
@@ -38,15 +40,17 @@
 - (IBAction)accept:(UIButton *)sender
 {
     ++self.gistNumber;
+    __weak typeof(self) weakSelf = self;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
-        if (!_gists.count) {
+        typeof(self) strongSelf = weakSelf;
+        if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromRight) animations:^{
-            [self.tableView reloadData];
+            [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
-            if (_gists.count) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (strongSelf.gists.count) {
+                [strongSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }];
     }];
@@ -66,15 +70,17 @@
 - (void)next
 {
     ++self.gistNumber;
+    __weak typeof(self) weakSelf = self;
     [self _reloadIfNecessaryWithCompletion:^(NSError *error) {
-        if (!_gists.count) {
+        typeof(self) strongSelf = weakSelf;
+        if (!strongSelf.gists.count || !strongSelf) {
             return;
         }
         [UIView transitionWithView:self.view duration:0.5f options:(UIViewAnimationOptionCurveEaseInOut|UIViewAnimationOptionTransitionFlipFromBottom) animations:^{
-            [self.tableView reloadData];
+            [strongSelf.tableView reloadData];
         } completion:^(BOOL finished) {
-            if (_gists.count) {
-                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
+            if (strongSelf.gists.count) {
+                [strongSelf.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:NO];
             }
         }];
     }];
@@ -219,12 +225,14 @@ typedef void (^CompletionBlock)(NSError *error);
     UIView *ret = [UIView new];
     ret.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     UILabel *label = [UILabel new];
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    label.numberOfLines = 2;
     label.font = [self _sectionHeaderFont];
     label.text = _gistFiles[section];
     [label sizeToFit];
     ret.backgroundColor = [[UIColor lightGrayColor] colorWithAlphaComponent:.95];
     [ret addSubview:label];
-    label.frame = CGRectMake(5, 0, label.bounds.size.width, label.bounds.size.height);
+    label.frame = CGRectMake(5, 1, label.bounds.size.width-10, label.bounds.size.height);
     [ret sizeToFit];
     return ret;
 }
@@ -241,7 +249,7 @@ typedef void (^CompletionBlock)(NSError *error);
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return [_gistFiles[section] boundingRectWithSize:CGSizeMake(tableView.bounds.size.width - 16.0f, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [self _sectionHeaderFont]} context:[NSStringDrawingContext new]].size.height + 6.0f;
+    return [_gistFiles[section] boundingRectWithSize:CGSizeMake(tableView.bounds.size.width - 10.0f, 9999.0f) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: [self _sectionHeaderFont]} context:[NSStringDrawingContext new]].size.height + 6.0f;
 }
 
 - (void)didReceiveMemoryWarning {
