@@ -20,6 +20,7 @@
 
 - (void)awakeFromNib {
     // Initialization code
+    [super awakeFromNib];
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -31,6 +32,7 @@
 - (void)prepareForReuse
 {
     self.textView.text = @"Loading...";
+    [super prepareForReuse];
 }
 
 - (CGSize)sizeThatFits:(CGSize)size
